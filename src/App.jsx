@@ -4,7 +4,7 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import Navbar from "./components/Navbar.jsx";
 import HeroSection from "./components/HeroSection.jsx";
 import Button from "./components/Button.jsx";
-import Footer from "./components/footer.jsx";
+import Footer from "./components/Footer.jsx";
 import OurServices from "./components/Our_services.jsx";
 import Subscription from "./components/Subscription.jsx";
 import WhyChooseUs from "./components/WhyChooseUs.jsx";
