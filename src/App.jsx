@@ -20,7 +20,6 @@ import AccidentalRepair from "./pages/AccidentalRepair";
 import Contact from "./pages/Contact";
 
 
-import "./App.css";
 import SpareParts from "./pages/SpareParts.jsx";
 import RSAServicePage from "./pages/RSAServicePage.jsx";
 import EngineRepairPage from "./pages/EngineRepairPage.jsx";
