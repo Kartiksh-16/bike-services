@@ -1,74 +1,103 @@
+// HowItWorks.jsx — Scroll-reveal, original data intact
+import { useRef, useEffect, useState } from "react";
+
 const steps = [
-  {
-    number: "1",
-    title: "Book Online", 
-    desc: "Choose your service and pick a date that works for you",
-  },
-  {
-    number: "2",
-    title: "Drop Off Your Bike",
-    desc: "Bring your bike to our service center at your scheduled time",
-  },
-  {
-    number: "3",
-    title: "We Service It",
-    desc: "Our certified mechanics handle everything with care",
-  },
-  {
-    number: "4",
-    title: "Pick It Up",
-    desc: "Collect your bike — fully serviced and good as new",
-  },
+  { number:"1", title:"Book Online",      desc:"Choose your service and pick a date that works for you" },
+  { number:"2", title:"Drop Off Your Bike",desc:"Bring your bike to our service center at your scheduled time" },
+  { number:"3", title:"We Service It",    desc:"Our certified mechanics handle everything with care" },
+  { number:"4", title:"Pick It Up",       desc:"Collect your bike — fully serviced and good as new" },
 ];
 
+function useReveal(threshold = 0.15) {
+  const ref = useRef(null);
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return [ref, vis];
+}
+
 export default function HowItWorks() {
+  const [headRef, headVis] = useReveal(0.2);
+
   return (
-    <section className="bg-cream py-16 px-6">
+    <section style={{ background:"#F0EBE0", padding:"6rem 1.5rem" }}>
       {/* Heading */}
-      <div className="text-center mb-12">
-        <p className="text-steel text-xl font-bold uppercase tracking-widest mb-3">
-          Simple Process
-        </p>
-        <h2 className="text-dark text-5xl font-black">How it works</h2>
+      <div
+        ref={headRef}
+        style={{
+          textAlign:"center", marginBottom:"3.5rem",
+          opacity: headVis ? 1 : 0,
+          transform: headVis ? "translateY(0)" : "translateY(36px)",
+          transition:"opacity 0.7s ease, transform 0.7s ease",
+        }}
+      >
+        <p style={{
+          color:"#1A4A7A", fontSize:"0.72rem", fontWeight:700,
+          letterSpacing:"0.38em", textTransform:"uppercase",
+          marginBottom:"0.75rem", fontFamily:"monospace",
+        }}>Simple Process</p>
+        <h2 style={{
+          fontFamily:"'Playfair Display', serif",
+          fontSize:"clamp(2rem, 4vw, 3.6rem)", fontWeight:900,
+          color:"#0A0A0F", margin:0,
+        }}>How it works</h2>
       </div>
 
-      {/* Steps Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {steps.map((step, index) => (
-          <div
-            key={index}
-            className="relative p-8 rounded-2xl bg-dark border border-white/10 backdrop-blur-sm hover:border-steel transition-all duration-300 group"
-          >
-            {/* Number Badge */}
-            <div className="absolute -top-4 -left-4 w-12 h-12 rounded-xl bg-steel text-dark flex items-center justify-center font-black text-xl shadow-lg rotate-0 group-hover:rotate-5 transition-transform">
-              {step.number}
-            </div>
+      {/* Grid */}
+      <div style={{
+        display:"grid",
+        gridTemplateColumns:"repeat(auto-fit, minmax(255px, 1fr))",
+        gap:"2rem", maxWidth:"860px", margin:"0 auto",
+      }}>
+        {steps.map((step, i) => {
+          const [cardRef, cardVis] = useReveal(0.1);
+          return (
+            <div
+              key={i}
+              ref={cardRef}
+              style={{
+                position:"relative",
+                padding:"2.2rem 1.8rem 1.8rem",
+                borderRadius:"18px",
+                background:"#0A0A0F",
+                border:"1px solid rgba(255,255,255,0.08)",
+                opacity: cardVis ? 1 : 0,
+                transform: cardVis ? "translateY(0)" : "translateY(40px)",
+                transition:`opacity 0.65s ease ${i * 120}ms, transform 0.65s ease ${i * 120}ms, border-color 0.3s`,
+                cursor:"default",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "#2A6FA8"; e.currentTarget.style.transform = "translateY(-5px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              {/* Number badge */}
+              <div style={{
+                position:"absolute", top:"-16px", left:"-16px",
+                width:"48px", height:"48px",
+                borderRadius:"14px",
+                background:"linear-gradient(135deg,#1A4A7A,#2A6FA8)",
+                display:"flex", alignItems:"center", justifyContent:"center",
+                fontWeight:900, fontSize:"1.3rem",
+                color:"#F0EBE0",
+                fontFamily:"'Playfair Display', serif",
+                boxShadow:"0 0 22px rgba(42,111,168,0.6)",
+              }}>{step.number}</div>
 
-            {/* Content */}
-            <div className="mt-4">
-              <h3 className="text-cream text-2xl font-bold mb-3">
-                {step.title}
-              </h3>
-              <p className="text-silver font-semibold text-sm leading-relaxed">
-                {step.desc}
-              </p>
+              <div style={{ marginTop:"0.8rem" }}>
+                <h3 style={{
+                  color:"#F0EBE0", fontSize:"1.35rem", fontWeight:700,
+                  marginBottom:"0.7rem", fontFamily:"'Playfair Display', serif",
+                }}>{step.title}</h3>
+                <p style={{ color:"#7A9CB8", fontSize:"0.875rem", lineHeight:1.65, margin:0 }}>
+                  {step.desc}
+                </p>
+              </div>
             </div>
-
-            {/* Optional: Line logic for Desktop */}
-            {index % 2 === 0 && (
-              <div className="hidden md:block absolute top-1/2 -right-10 w-8 h-px bg-silver/20" />
-            )}
-
-            {/* Text */}
-            <div>
-              <p className="text-dark text-base font-bold mb-1">{step.title}</p>
-              {/* <p className="text-steel text-sm leading-relaxed">{step.desc}</p> */}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
-
-     
     </section>
   );
 }
